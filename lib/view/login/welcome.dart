@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:groceries/view/login/sign_in_view.dart';
-import 'package:groceries/view/main_tab_bar/main_tab_bar.dart';
+
 
 import '../../common/widgets/round_button.dart';
+import '../tabBar/main_tab_bar.dart';
 
 
 class WelcomeView extends StatefulWidget {

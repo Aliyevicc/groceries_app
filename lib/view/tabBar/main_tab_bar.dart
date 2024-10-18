@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:groceries/common/style/color_extensions/color_extensions.dart';
+import 'package:groceries/view/cart/cart_screen.dart';
 import 'package:groceries/view/home/home_screen.dart';
 
 class TabBArView extends StatefulWidget {
@@ -36,11 +37,12 @@ class _TabBArViewState extends State<TabBArView>
   Widget build(BuildContext context) {
     return Scaffold(
       body: TabBarView(
+        physics:const NeverScrollableScrollPhysics(),
         controller: tabController,
         children: [
           const HomeScreen(),
           Container(),
-          Container(),
+          const CartScreen(),
           Container(),
           Container(),
         ],
