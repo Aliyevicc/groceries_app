@@ -1,6 +1,5 @@
 import 'package:flutter/foundation.dart';
-import 'model/model.dart';
-
+import '../model/provider_model.dart';
 
 class CartProvider with ChangeNotifier {
   final Map<Product, int> _cartItems = {};
@@ -24,6 +23,12 @@ class CartProvider with ChangeNotifier {
     } else {
       _cartItems.remove(product);
     }
+    notifyListeners();
+  }
+
+
+  void removeItem(Product product) {
+    _cartItems.remove(product);
     notifyListeners();
   }
 

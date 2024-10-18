@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../common/products/products_map.dart';
-import '../../common/provider/model/model.dart';
-import '../../common/provider/provider.dart';
+import '../../common/provider/model/provider_model.dart';
+import '../../common/provider/provider/provider.dart';
 import '../../common/style/color_extensions/color_extensions.dart';
 
 

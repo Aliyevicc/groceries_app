@@ -8,4 +8,5 @@ class TColor{
   static Color get placeholder => const Color(0xffB1B1B1);
   static Color get backgroundColor => const Color(0xffffffff);
   static Color get darkGrey => const Color(0xff4C4F4D);
+  static Color get myGrey => const Color(0xffB3B3B3);
 }

@@ -4,7 +4,7 @@ import 'package:groceries/view/splash/splash.dart';
 import 'package:groceries/view/tabBar/main_tab_bar.dart';
 import 'package:provider/provider.dart';
 
-import 'common/provider/provider.dart';
+import 'common/provider/provider/provider.dart';
 import 'common/style/color_extensions/color_extensions.dart';
 
 void main() {
