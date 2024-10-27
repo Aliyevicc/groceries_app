@@ -3,6 +3,8 @@ import 'package:groceries/view/detail/detail_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:lottie/lottie.dart';
 import '../../common/geolocator/geolocator_settings.dart';
+import 'package:lottie/lottie.dart'; // Lottie import qiling
+import '../../common/geolocator/geolocator_settings.dart';
 import '../../common/products/products_map.dart';
 import '../../common/provider/model/provider_model.dart';
 import '../../common/provider/products_provider/provider.dart';
@@ -17,6 +19,30 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   TextEditingController searchController = TextEditingController();
+  String? _currentCity;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadCurrentCity();
+  }
+
+  void _loadCurrentCity() async {
+    String? city = await getCurrentCity();
+    setState(() {
+      _currentCity = city;
+    });
+  }
+
+  Future<void> _refreshData() async {
+    // Your refresh logic here, for example, reloading the products
+    await Future.delayed(
+        const Duration(seconds: 2)); // Simulating network delay
+    // If you have data fetching logic, call it here
+    // setState(() {
+    //   // Update your state if needed
+    // });
+  }
   String? _currentCity;
 
   @override
