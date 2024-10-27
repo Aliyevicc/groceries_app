@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:groceries/view/profile/details/about_sceen.dart';
-import 'package:groceries/view/profile/details/delivrey_address_screen.dart';
-import 'package:groceries/view/profile/details/help_screen.dart';
-import 'package:groceries/view/profile/details/my_details_screen.dart';
-import 'package:groceries/view/profile/details/notifecations_screen.dart';
-import 'package:groceries/view/profile/details/orders_screen.dart';
-import 'package:groceries/view/profile/details/payment_methods_screen.dart';
-import 'package:groceries/view/profile/details/promo_cord_screen.dart';
+
+import 'details/about_sceen.dart';
+import 'details/delivrey_address_screen.dart';
+import 'details/help_screen.dart';
+import 'details/my_details_screen.dart';
+import 'details/notifecations_screen.dart';
+import 'details/orders_screen.dart';
+import 'details/payment_methods_screen.dart';
+import 'details/promo_cord_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});

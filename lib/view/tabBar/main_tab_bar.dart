@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:groceries/common/style/color_extensions/color_extensions.dart';
+import 'package:groceries/view/Profile_Page/profile/profile_screen.dart';
 import 'package:groceries/view/cart/cart_screen.dart';
+import 'package:groceries/view/favourite/favourite_screen.dart';
 import 'package:groceries/view/home/home_screen.dart';
+import 'package:groceries/view/search/search_screen.dart';
+
+
 
 class TabBArView extends StatefulWidget {
   const TabBArView({super.key});
@@ -39,12 +44,12 @@ class _TabBArViewState extends State<TabBArView>
       body: TabBarView(
         physics:const NeverScrollableScrollPhysics(),
         controller: tabController,
-        children: [
-          const HomeScreen(),
-          Container(),
-          const CartScreen(),
-          Container(),
-          Container(),
+        children: const [
+          HomeScreen(),
+          SearchScreen(),
+          CartScreen(),
+          FavoriteScreen(),
+          ProfileScreen(),
         ],
       ),
       bottomNavigationBar: ClipRRect(
