@@ -33,10 +33,8 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future<void> _refreshData() async {
-    // Your refresh logic here, for example, reloading the products
     await Future.delayed(
         const Duration(seconds: 2)); // Simulating network delay
-    // If you have data fetching logic, call it here
     // setState(() {
     //   // Update your state if needed
     // });
