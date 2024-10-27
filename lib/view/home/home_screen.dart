@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:groceries/view/detail/detail_screen.dart';
 import 'package:provider/provider.dart';
-import 'package:lottie/lottie.dart'; // Lottie import qiling
+import 'package:lottie/lottie.dart';
 import '../../common/geolocator/geolocator_settings.dart';
 import '../../common/products/products_map.dart';
 import '../../common/provider/model/provider_model.dart';
