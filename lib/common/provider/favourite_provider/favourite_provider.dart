@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../model/provider_model.dart';
+import '../products_model/provider_model.dart';
 
 class FavoritesProvider with ChangeNotifier {
   List<Product> _favoriteItems = [];
@@ -33,8 +33,8 @@ class FavoritesProvider with ChangeNotifier {
 
   Future<void> saveFavorites() async {
     final prefs = await SharedPreferences.getInstance();
-    List<String> favoritesList = _favoriteItems.map((item) => item.toMap()).cast<String>().toList();
-    await prefs.setStringList('favorites', favoritesList.map((item) => jsonEncode(item)).toList());
+    List<String> favoritesList = _favoriteItems.map((item) => jsonEncode(item.toMap())).toList();
+    await prefs.setStringList('favorites', favoritesList);
   }
 
   Future<void> loadFavorites() async {
@@ -45,4 +45,5 @@ class FavoritesProvider with ChangeNotifier {
       notifyListeners();
     }
   }
+
 }

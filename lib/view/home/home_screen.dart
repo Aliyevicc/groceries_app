@@ -1,17 +1,25 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:groceries/view/detail/detail_screen.dart';
+import 'package:groceries/view/home/home_categories/Best_selling_section.dart';
+import 'package:groceries/view/home/home_categories/Exclusive_offer_section.dart';
+import 'package:groceries/view/home/home_categories/groceries_section.dart';
+import 'package:groceries/view/home/home_categories/meat_section.dart';
 import 'package:provider/provider.dart';
 import 'package:lottie/lottie.dart';
-import '../../common/geolocator/geolocator_settings.dart';
-import 'package:lottie/lottie.dart'; // Lottie import qiling
+import '../../common/connection/check_connection.dart';
 import '../../common/geolocator/geolocator_settings.dart';
 import '../../common/products/products_map.dart';
-import '../../common/provider/model/provider_model.dart';
+
+import '../../common/provider/products_model/provider_model.dart';
 import '../../common/provider/products_provider/provider.dart';
 import '../../common/style/color_extensions/color_extensions.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+  final TabController? tabController;
+
+  const HomeScreen({super.key, this.tabController});
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -21,49 +29,48 @@ class _HomeScreenState extends State<HomeScreen> {
   TextEditingController searchController = TextEditingController();
   String? _currentCity;
 
+  bool _isConnected = true;
+  final ConnectionChecker _connectionChecker = ConnectionChecker();
+
+  Future<void> checkConnection() async {
+    _isConnected = await _connectionChecker.hasInternetConnection();
+
+    if (!_isConnected) {
+      _showNoConnectionDialog();
+    }
+    setState(() {});
+  }
+
+  void _showNoConnectionDialog() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Internet ulanishi yo\'q'),
+          content: const Text('Iltimos, internetga ulanganingizni tekshiring.'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   void initState() {
     super.initState();
-    _loadCurrentCity();
+    checkConnection();
   }
-
-  void _loadCurrentCity() async {
-    String? city = await getCurrentCity();
-    setState(() {
-      _currentCity = city;
-    });
-  }
-
-  Future<void> _refreshData() async {
-    // Your refresh logic here, for example, reloading the products
-    await Future.delayed(
-        const Duration(seconds: 2)); // Simulating network delay
-    // If you have data fetching logic, call it here
-    // setState(() {
-    //   // Update your state if needed
-    // });
-  }
-  String? _currentCity;
 
   @override
-  void initState() {
-    super.initState();
-    _loadCurrentCity();
-  }
-
-  void _loadCurrentCity() async {
-    String? city = await getCurrentCity();
-    setState(() {
-      _currentCity = city;
-    });
-  }
-
-  Future<void> _refreshData() async {
-    await Future.delayed(
-        const Duration(seconds: 2)); // Simulating network delay
-    // setState(() {
-    //   // Update your state if needed
-    // });
+  void dispose() {
+    searchController.dispose();
+    super.dispose();
   }
 
   @override
@@ -89,400 +96,178 @@ class _HomeScreenState extends State<HomeScreen> {
     List<Product> exclusiveOffer = convertToProductList(exclusiveOfferData);
     List<Product> bestSelling = convertToProductList(bestSellingData);
 
-    return Scaffold(
-      backgroundColor: TColor.backgroundColor,
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-             const SizedBox(height: 20,),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Image.asset(
-                    "assets/images/red_carrot.png",
-                    width: media.width * 0.1,
-                    height: media.width * 0.1,
-                  ),
-                ],
+    return WillPopScope(
+      onWillPop: () async {
+        bool shouldExit = await showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: const Text("Are you sure you want to exit?"),
+            content: const Text("Do you really want to close the app?"),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(false),
+                child: const Text("Cancel"),
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Image.asset(
-                    "assets/images/metka.png",
-                    width: media.width * 0.05,
-                  ),
-                  const SizedBox(width: 10),
-                  Text(
-                    "Uzbekistan,Tashkent",
-                    style: TextStyle(
-                      color: TColor.darkGrey,
-                      fontSize: media.width * 0.06,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 15),
-
-              // Search Bar
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Container(
-                  height: media.height * 0.07,
-                  decoration: BoxDecoration(
-                    color: const Color(0xffF2F3F2),
-                    borderRadius: BorderRadius.circular(15),
-                  ),
-                  alignment: Alignment.center,
-                  child: TextField(
-                    controller: searchController,
-                    decoration: InputDecoration(
-                      prefixIcon: Padding(
-                        padding: const EdgeInsets.all(10),
-                        child: Image.asset(
-                          "assets/images/search_icon.png",
-                          width: media.width * 0.05,
-                          height: media.width * 0.05,
-                        ),
-                      ),
-                      border: InputBorder.none,
-                      hintText: "Search Store",
-                      hintStyle: TextStyle(
-                        color: TColor.secondaryText,
-                        fontSize: media.width * 0.045,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-
-              Padding(
-                padding: const EdgeInsets.only(left: 16),
-                child: SizedBox(
-                  height: media.height * 0.2,
-                  width: media.width * 0.9,
-                  child: Image.asset("assets/img/banner_top.png"),
-                ),
-              ),
-
-              // Exclusive Offer Section
-              const Padding(
-                padding: EdgeInsets.only(left: 16),
-                child: Text(
-                  "Exclusive Offer",
-                  style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-              SizedBox(
-                height: media.height * 0.31,
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: exclusiveOffer.length,
-                  itemBuilder: (context, index) {
-                    final product = exclusiveOffer[index];
-                    return Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: InkWell(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => DetailScreen(
-                                imageUrl: product.image,
-                                name: product.name,
-                                weight: product.weight,
-                                description: product.description,
-                                price: product.price.toString(),
-                              ),
-                            ),
-                          );
-                        },
-                        child: Container(
-                          width: media.width * 0.44,
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(24),
-                            border: Border.all(
-                              color: const Color(0xffE2E2E2),
-                            ),
-                          ),
-                          child: Column(
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.only(
-                                  top: 20,
-                                  left: 20,
-                                  right: 20,
-                                ),
-                                child: SizedBox(
-                                  height: media.height * 0.13,
-                                  width: media.width * 0.6,
-                                  child: Image.network(
-                                    product.image,
-                                    fit: BoxFit.cover,
-                                    width: double.infinity,
-                                    height: media.height * 0.13,
-                                    loadingBuilder: (context, child, progress) {
-                                      if (progress == null) return child;
-                                      return Center(
-                                        child: Lottie.asset(
-                                          'assets/lottie/myLoading.json',
-                                          height: 80,
-                                          width: 80,
-                                        ),
-                                      );
-                                    },
-                                  ),
-                                ),
-                              ),
-                              Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 10),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      product.name,
-                                      style: TextStyle(
-                                        color: TColor.primaryText,
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: media.width * 0.05,
-                                      ),
-                                      overflow: TextOverflow.ellipsis,
-                                      maxLines: 1,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 10),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      product.weight,
-                                      style: TextStyle(
-                                        color: TColor.secondaryText,
-                                        fontSize: media.width * 0.045,
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              Row(
-                                children: [
-                                  const SizedBox(width: 5),
-                                  Text(
-                                    ' \$${product.price.toString()}',
-                                    style: const TextStyle(
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 25,
-                                    ),
-                                  ),
-                                  const Spacer(),
-                                  Row(
-                                    children: [
-                                      IconButton(
-                                        icon: const Icon(Icons.remove_circle),
-                                        onPressed: () {
-                                          Provider.of<CartProvider>(context,
-                                                  listen: false)
-                                              .removeFromCart(product);
-                                        },
-                                      ),
-                                      Text(
-                                        '${Provider.of<CartProvider>(context).cartItems[product] ?? 0}',
-                                        style: const TextStyle(fontSize: 20),
-                                      ),
-                                      IconButton(
-                                        icon: const Icon(Icons.add_circle),
-                                        onPressed: () {
-                                          Provider.of<CartProvider>(context,
-                                                  listen: false)
-                                              .addToCart(product);
-                                        },
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    );
-                  },
-                ),
-              ),
-
-              const SizedBox(height: 20),
-
-              // Best Selling Section
-              const Padding(
-                padding: EdgeInsets.only(left: 16),
-                child: Text(
-                  "Best Selling",
-                  style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-              SizedBox(
-                height: media.height * 0.31,
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: bestSelling.length,
-                  itemBuilder: (context, index) {
-                    final product = bestSelling[index];
-                    return Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: InkWell(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => DetailScreen(
-                                imageUrl: product.image,
-                                name: product.name,
-                                weight: product.weight,
-                                description: product.description,
-                                price: product.price.toString(),
-                              ),
-                            ),
-                          );
-                        },
-                        child: Container(
-                          width: media.width * 0.44,
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(24),
-                            border: Border.all(
-                              color: const Color(0xffE2E2E2),
-                            ),
-                          ),
-                          child: Column(
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.only(
-                                    top: 20, left: 20, right: 20),
-                                child: SizedBox(
-                                  height: media.height * 0.13,
-                                  width: media.width * 0.6,
-                                  child: Image.network(
-                                    product.image,
-                                    fit: BoxFit.cover,
-                                    width: double.infinity,
-                                    height: media.height * 0.13,
-                                    loadingBuilder: (context, child, progress) {
-                                      if (progress == null) return child;
-                                      return Center(
-                                        child: Lottie.asset(
-                                          'assets/lottie/threeDotsLottie.json',
-                                          height: 80,
-                                          width: 80,
-                                        ),
-                                      );
-                                    },
-                                  ),
-                                ),
-                              ),
-                              Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 10),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      product.name,
-                                      style: TextStyle(
-                                        color: TColor.primaryText,
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: media.width * 0.05,
-                                      ),
-                                      overflow: TextOverflow.ellipsis,
-                                      maxLines: 1,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 10),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      product.weight,
-                                      style: TextStyle(
-                                        color: TColor.secondaryText,
-                                        fontSize: media.width * 0.045,
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              Row(
-                                children: [
-                                  const SizedBox(width: 5),
-                                  Text(
-                                    ' \$${product.price.toString()}',
-                                    style: const TextStyle(
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 25,
-                                    ),
-                                  ),
-                                  const Spacer(),
-                                  Row(
-                                    children: [
-                                      IconButton(
-                                        icon: const Icon(Icons.remove_circle),
-                                        onPressed: () {
-                                          Provider.of<CartProvider>(context,
-                                                  listen: false)
-                                              .removeFromCart(product);
-                                        },
-                                      ),
-                                      Text(
-                                        '${Provider.of<CartProvider>(context).cartItems[product] ?? 0}',
-                                        style: const TextStyle(fontSize: 20),
-                                      ),
-                                      IconButton(
-                                        icon: const Icon(Icons.add_circle),
-                                        onPressed: () {
-                                          Provider.of<CartProvider>(context,
-                                                  listen: false)
-                                              .addToCart(product);
-                                        },
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    );
-                  },
-                ),
+              TextButton(
+                onPressed: () {
+                  SystemNavigator.pop();
+                },
+                child: const Text("Exit"),
               ),
             ],
+          ),
+        );
+        return shouldExit ?? false;
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          title:    Image.asset(
+            "assets/images/red_carrot.png",
+            width: media.width * 0.1,
+            height: media.width * 0.1,
+          ),
+          centerTitle: true,
+          backgroundColor: Colors.white.withOpacity(0.0),
+          elevation: 0,
+        ),
+        backgroundColor: TColor.backgroundColor,
+        body: SafeArea(
+          child: SingleChildScrollView(
+            primary: true,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(
+                  height: 20,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Image.asset(
+                      "assets/images/metka.png",
+                      width: media.width * 0.05,
+                    ),
+                    const SizedBox(width: 10),
+                    Text(
+                      "Uzbekistan,Tashkent",
+                      style: TextStyle(
+                        color: TColor.darkGrey,
+                        fontSize: media.width * 0.06,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 15),
+
+                // Search Bar
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: Container(
+                    height: media.height * 0.07,
+                    decoration: BoxDecoration(
+                      color: const Color(0xffF2F3F2),
+                      borderRadius: BorderRadius.circular(15),
+                    ),
+                    alignment: Alignment.center,
+                    child: TextField(
+                      onTap: () {
+                        widget.tabController?.animateTo(1);
+                      },
+                      controller: searchController,
+                      decoration: InputDecoration(
+                        prefixIcon: Padding(
+                          padding: const EdgeInsets.all(10),
+                          child: Image.asset(
+                            "assets/images/search_icon.png",
+                            width: media.width * 0.05,
+                            height: media.width * 0.05,
+                          ),
+                        ),
+                        border: InputBorder.none,
+                        hintText: "Search Store",
+                        hintStyle: TextStyle(
+                          color: TColor.secondaryText,
+                          fontSize: media.width * 0.045,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+
+                Padding(
+                  padding: const EdgeInsets.only(left: 16),
+                  child: SizedBox(
+                    height: media.height * 0.2,
+                    width: media.width * 0.9,
+                    child: Image.asset("assets/img/banner_top.png"),
+                  ),
+                ),
+
+                // Exclusive Offer Section
+                const Padding(
+                  padding: EdgeInsets.only(left: 16),
+                  child: Text(
+                    "Exclusive Offer",
+                    style: TextStyle(
+                      fontSize: 28,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                const ExclusiveOfferSection(),
+
+                const SizedBox(height: 20),
+
+                // Best Selling Section
+                const Padding(
+                  padding: EdgeInsets.only(left: 16),
+                  child: Text(
+                    "Best Selling",
+                    style: TextStyle(
+                      fontSize: 28,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                const BestSellingSection(),
+
+                const SizedBox(
+                  height: 20,
+                ),
+
+//GROCERIES SECTION
+                const Padding(
+                  padding: EdgeInsets.only(left: 16),
+                  child: Text(
+                    "Groceries",
+                    style: TextStyle(
+                      fontSize: 28,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+               const GroceriesSection(),
+                const SizedBox(
+                  height: 20,
+                ),
+//MEAT SECTION
+                const Padding(
+                  padding: EdgeInsets.only(left: 16),
+                  child: Text(
+                    "Meat and Fish",
+                    style: TextStyle(
+                      fontSize: 28,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                const MeatSection(),
+              ],
+            ),
           ),
         ),
       ),

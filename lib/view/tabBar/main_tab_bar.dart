@@ -1,34 +1,37 @@
+
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:groceries/common/style/color_extensions/color_extensions.dart';
-import 'package:groceries/view/Profile_Page/profile/profile_screen.dart';
-import 'package:groceries/view/cart/cart_screen.dart';
-import 'package:groceries/view/favourite/favourite_screen.dart';
-import 'package:groceries/view/home/home_screen.dart';
-import 'package:groceries/view/search/search_screen.dart';
+import 'package:flutter_svg/svg.dart';
 
-
+import '../../common/style/color_extensions/color_extensions.dart';
+import '../Profile_Page/profile/profile_screen.dart';
+import '../cart/cart_screen.dart';
+import '../favourite/favourite_screen.dart';
+import '../home/home_screen.dart';
+import '../search/search_screen.dart';
 
 class TabBArView extends StatefulWidget {
-  const TabBArView({super.key});
+  final int selectedIndex;
+
+  const TabBArView({super.key, this.selectedIndex = 0});
 
   @override
   State<TabBArView> createState() => _TabBArViewState();
 }
-
-class _TabBArViewState extends State<TabBArView>
-    with SingleTickerProviderStateMixin {
+class _TabBArViewState extends State<TabBArView> with SingleTickerProviderStateMixin {
   TabController? tabController;
-  int selectedTabIndex = 0;
+  late int selectedTabIndex;
 
   @override
   void initState() {
     super.initState();
-    tabController = TabController(length: 5, vsync: this);
+    selectedTabIndex = widget.selectedIndex;
+    tabController = TabController(length: 5, vsync: this, initialIndex: selectedTabIndex);
 
-    tabController?.addListener(() {
-      selectedTabIndex = tabController?.index ?? 0;
-      setState(() {});
+
+    tabController!.addListener(() {
+      setState(() {
+        selectedTabIndex = tabController!.index;
+      });
     });
   }
 
@@ -42,14 +45,14 @@ class _TabBArViewState extends State<TabBArView>
   Widget build(BuildContext context) {
     return Scaffold(
       body: TabBarView(
-        physics:const NeverScrollableScrollPhysics(),
+        physics: const NeverScrollableScrollPhysics(),
         controller: tabController,
-        children: const [
-          HomeScreen(),
-          SearchScreen(),
-          CartScreen(),
-          FavoriteScreen(),
-          ProfileScreen(),
+        children: [
+          HomeScreen(tabController: tabController),
+          const SearchScreen(),
+          const CartScreen(),
+          const FavoriteScreen(),
+          const ProfileScreen(),
         ],
       ),
       bottomNavigationBar: ClipRRect(
@@ -61,20 +64,17 @@ class _TabBArViewState extends State<TabBArView>
           child: TabBar(
             controller: tabController,
             indicatorColor: Colors.transparent,
-            indicatorWeight: 1,
             labelColor: TColor.primary,
-            labelStyle: TextStyle(
-              color: TColor.primary,
+            labelStyle: const TextStyle(
               fontSize: 12,
               fontWeight: FontWeight.w600,
             ),
             unselectedLabelColor: TColor.primaryText,
-            unselectedLabelStyle: TextStyle(
-              color: TColor.primaryText,
-              fontSize: 12,
-              fontWeight: FontWeight.w600,
+            unselectedLabelStyle: const TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.w600,
+                color: Colors.black
             ),
-            labelPadding: const EdgeInsets.symmetric(horizontal: 2,vertical: 3),
             tabs: [
               Tab(
                 text: "Shop",
@@ -118,3 +118,4 @@ class _TabBArViewState extends State<TabBArView>
     );
   }
 }
+

@@ -1,7 +1,5 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:pinput/pinput.dart';
-
 import '../../common/style/color_extensions/color_extensions.dart';
 import '../../common/widgets/customKeyBoard.dart';
 
@@ -75,7 +73,7 @@ class _VerificationCodeScreenState extends State<VerificationCodeScreen> {
                     width: 60,
                     fit: BoxFit.cover,
                   )),
-              SizedBox(
+              const SizedBox(
                 height: 80,
               ),
               Text("Please,Enter your 4-digit code",
@@ -85,7 +83,7 @@ class _VerificationCodeScreenState extends State<VerificationCodeScreen> {
                 fontWeight: FontWeight.w500
               ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 30,
               ),
               Container(

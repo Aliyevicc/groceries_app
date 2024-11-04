@@ -35,7 +35,20 @@ class _SearchScreenState extends State<SearchScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.white.withOpacity(0.0),
+        elevation: 0,
+        title: const Text(
+          "Find products",
+          style: TextStyle(
+              fontSize: 30, fontWeight: FontWeight.bold, color: Colors.black),
+          textAlign: TextAlign.center,
+        ),
+        centerTitle: true,
+      ),
       backgroundColor: Colors.white,
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -44,14 +57,6 @@ class _SearchScreenState extends State<SearchScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                const Text(
-                  "Find products",
-                  style: TextStyle(
-                      fontSize: 30,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black),
-                  textAlign: TextAlign.center,
-                ),
                 const SizedBox(height: 16),
                 TextField(
                   controller: _searchController,
@@ -153,10 +158,9 @@ class _SearchScreenState extends State<SearchScreen> {
                           )
                     : Column(
                         children: [
-                          // Your existing categories UI
                           Row(
                             children: [
-                              const SizedBox(width: 7),
+                              const SizedBox(width: 15),
                               InkWell(
                                 onTap: () {
                                   Navigator.push(
@@ -169,8 +173,8 @@ class _SearchScreenState extends State<SearchScreen> {
                                   );
                                 },
                                 child: Container(
-                                  height: 190,
-                                  width: 174,
+                                  height: screenWidth * 0.5, // Dinamik bo'y
+                                  width: screenWidth * 0.4, // Dinamik kenglik
                                   decoration: BoxDecoration(
                                     color: const Color(0xFF53B175)
                                         .withOpacity(0.3),
@@ -183,7 +187,9 @@ class _SearchScreenState extends State<SearchScreen> {
                                     children: [
                                       const SizedBox(height: 30),
                                       Image.asset(
-                                          'assets/categories/vegatables.png'),
+                                        'assets/categories/vegatables.png',
+                                        width: screenWidth * 0.3, // Dinamik
+                                      ),
                                       const Text(
                                         "Fresh Fruits \n&Vegetables",
                                         style: TextStyle(
@@ -208,8 +214,8 @@ class _SearchScreenState extends State<SearchScreen> {
                                   );
                                 },
                                 child: Container(
-                                  height: 190,
-                                  width: 174,
+                                  height: screenWidth * 0.5,
+                                  width: screenWidth * 0.4,
                                   decoration: BoxDecoration(
                                     color: const Color(0xFFF8A44C)
                                         .withOpacity(0.3),
@@ -223,6 +229,7 @@ class _SearchScreenState extends State<SearchScreen> {
                                       const SizedBox(height: 18),
                                       Image.asset(
                                         'assets/categories/cooking.png',
+                                        width: screenWidth * 0.3,
                                       ),
                                       const Text(
                                         "Cooking oil\n    &Ghee",
@@ -240,9 +247,7 @@ class _SearchScreenState extends State<SearchScreen> {
                           const SizedBox(height: 10),
                           Row(
                             children: [
-                              const SizedBox(
-                                width: 7,
-                              ),
+                              const SizedBox(width: 15),
                               InkWell(
                                 onTap: () {
                                   Navigator.push(
@@ -256,8 +261,8 @@ class _SearchScreenState extends State<SearchScreen> {
                                   );
                                 },
                                 child: Container(
-                                  height: 190,
-                                  width: 174,
+                                  height: screenWidth * 0.5,
+                                  width: screenWidth * 0.4,
                                   decoration: BoxDecoration(
                                       color: const Color(0x0ff7a593)
                                           .withOpacity(0.3),
@@ -270,7 +275,10 @@ class _SearchScreenState extends State<SearchScreen> {
                                       const SizedBox(
                                         height: 30,
                                       ),
-                                      Image.asset('assets/categories/meat.png'),
+                                      Image.asset(
+                                        'assets/categories/meat.png',
+                                        width: screenWidth * 0.3,
+                                      ),
                                       const SizedBox(
                                         height: 30,
                                       ),
@@ -300,8 +308,8 @@ class _SearchScreenState extends State<SearchScreen> {
                                   );
                                 },
                                 child: Container(
-                                  height: 190,
-                                  width: 174,
+                                  height: screenWidth * 0.5,
+                                  width: screenWidth * 0.4,
                                   decoration: BoxDecoration(
                                       color: const Color(0xFFD3B0E0)
                                           .withOpacity(0.3),
@@ -315,7 +323,9 @@ class _SearchScreenState extends State<SearchScreen> {
                                         height: 30,
                                       ),
                                       Image.asset(
-                                          'assets/categories/bakery.png'),
+                                        'assets/categories/bakery.png',
+                                        width: screenWidth * 0.3,
+                                      ),
                                       const SizedBox(
                                         height: 30,
                                       ),
@@ -336,9 +346,7 @@ class _SearchScreenState extends State<SearchScreen> {
                           ),
                           Row(
                             children: [
-                              const SizedBox(
-                                width: 7,
-                              ),
+                              const SizedBox(width: 15),
                               InkWell(
                                 onTap: () {
                                   Navigator.push(
@@ -352,8 +360,8 @@ class _SearchScreenState extends State<SearchScreen> {
                                   );
                                 },
                                 child: Container(
-                                  height: 190,
-                                  width: 174,
+                                  height: screenWidth * 0.5,
+                                  width: screenWidth * 0.4,
                                   decoration: BoxDecoration(
                                       color: const Color(0xFFFDE598)
                                           .withOpacity(0.3),
@@ -367,7 +375,9 @@ class _SearchScreenState extends State<SearchScreen> {
                                         height: 30,
                                       ),
                                       Image.asset(
-                                          'assets/categories/jalab.png'),
+                                        'assets/categories/jalab.png',
+                                        width: screenWidth * 0.3,
+                                      ),
                                       const SizedBox(
                                         height: 30,
                                       ),
@@ -397,29 +407,33 @@ class _SearchScreenState extends State<SearchScreen> {
                                   );
                                 },
                                 child: Container(
-                                  height: 190,
-                                  width: 174,
+                                  height: screenWidth * 0.5,
+                                  width: screenWidth * 0.4,
                                   decoration: BoxDecoration(
-                                      color: const Color(0xFFB7DFF5)
+                                      color: const Color(0xFFEAB5B5)
                                           .withOpacity(0.3),
                                       borderRadius: BorderRadius.circular(19),
                                       border: Border.all(
-                                        color: const Color(0xFFB7DFF5),
+                                        color: const Color(0xFFEAB5B5),
                                       )),
                                   child: Column(
                                     children: [
                                       const SizedBox(
                                         height: 30,
                                       ),
-                                      Image.asset('assets/categories/last.png'),
+                                      Image.asset(
+                                        'assets/categories/last.png',
+                                        width: screenWidth * 0.3,
+                                      ),
                                       const SizedBox(
-                                        height: 20,
+                                        height: 30,
                                       ),
                                       const Text(
                                         "Beverages",
                                         style: TextStyle(
-                                            fontSize: 20,
-                                            fontWeight: FontWeight.w700),
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.w700,
+                                        ),
                                       ),
                                     ],
                                   ),
@@ -429,6 +443,9 @@ class _SearchScreenState extends State<SearchScreen> {
                           ),
                         ],
                       ),
+                const SizedBox(
+                  height: 30,
+                ),
               ],
             ),
           ),

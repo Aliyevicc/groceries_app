@@ -21,7 +21,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: Column(
+        child: ListView(
           children: [
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 20),
@@ -71,7 +71,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             const ListTilee(
               icon: "assets/icons/profile_box.png",
               name: "Orders",
-              tapPath: OrdersDetailsScreen(),
+              tapPath: OrdersScreen(),
             ),
             const MyDivider(),
             const ListTilee(
@@ -107,49 +107,55 @@ class _ProfileScreenState extends State<ProfileScreen> {
             const ListTilee(
               icon: "assets/icons/profile_help.png",
               name: "Help",
-              tapPath:HelpScreen(),
+              tapPath: HelpScreen(),
             ),
             const MyDivider(),
             const ListTilee(
               icon: "assets/icons/profile_about.png",
               name: "About",
-              tapPath: AboutSceen(),
+              tapPath: AboutScreen(),
             ),
             const MyDivider(),
             const Spacer(),
-            Container(
-              // alignment: Alignment.centerLeft,
-              height: 67,
-              width: 364,
-              decoration: BoxDecoration(
-                color: Colors.grey.shade200,
-                borderRadius: const BorderRadius.all(
-                  Radius.circular(16),
+            const SizedBox(
+              height: 10,
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20.0),
+              child: Container(
+                // alignment: Alignment.centerLeft,
+                height: 67,
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  color: Colors.grey.shade200,
+                  borderRadius: const BorderRadius.all(
+                    Radius.circular(16),
+                  ),
                 ),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 24.0),
-                child: Row(
-                  children: [
-                    SizedBox(
-                      height: 18,
-                      width: 18,
-                      child: Image.asset("assets/icons/profile_log_out.png"),
-                    ),
-                    const SizedBox(width: 110),
-                    const Text(
-                      "Log Out",
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.w600,
-                        color: Color(0xFF53B175),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 30.0),
+                  child: Row(
+                    children: [
+                      SizedBox(
+                        height: 18,
+                        width: 18,
+                        child: Image.asset("assets/icons/profile_log_out.png"),
                       ),
-                    ),
-                  ],
+                      const SizedBox(width: 110),
+                      const Text(
+                        "Log Out",
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.w600,
+                          color: Color(0xFF53B175),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 15),
           ],
         ),
       ),

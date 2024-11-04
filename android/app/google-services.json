@@ -2,7 +2,7 @@
   "project_info": {
     "project_number": "942282069506",
     "project_id": "groceries-7502f",
-    "storage_bucket": "groceries-7502f.appspot.com"
+    "storage_bucket": "groceries-7502f.firebasestorage.app"
   },
   "client": [
     {

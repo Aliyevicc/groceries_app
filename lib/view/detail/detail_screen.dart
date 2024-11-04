@@ -1,9 +1,13 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:groceries/view/tabBar/main_tab_bar.dart';
+import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import '../../common/provider/favourite_provider/favourite_provider.dart';
-import '../../common/provider/model/provider_model.dart';
+
+import '../../common/provider/products_model/provider_model.dart';
 import '../../common/provider/products_provider/provider.dart';
 import '../../common/style/color_extensions/color_extensions.dart';
 
@@ -29,11 +33,13 @@ class DetailScreen extends StatefulWidget {
 
 class _DetailScreenState extends State<DetailScreen> {
   int productQuantity = 1;
+  int myItemCount = 0;
 
   @override
   Widget build(BuildContext context) {
     var media = MediaQuery.of(context).size;
     final favoriteProvider = Provider.of<FavoritesProvider>(context);
+    final cartProvider = Provider.of<CartProvider>(context);
 
     final product = Product(
       name: widget.name,
@@ -87,9 +93,26 @@ class _DetailScreenState extends State<DetailScreen> {
                       SizedBox(
                         height: media.height * 0.25,
                         width: media.width * 0.65,
-                        child: Image.network(
-                          widget.imageUrl,
+                        child: CachedNetworkImage(
+                          imageUrl: product.image,
                           fit: BoxFit.cover,
+                          width: double.infinity,
+                          height: media.height * 0.13,
+                          placeholder: (context, url) => Center(
+                            child: Lottie.asset(
+                              'assets/lottie/threeDotsLottie.json',
+                              height: 80,
+                              width: 80,
+                            ),
+                          ),
+                          errorWidget: (context, url, error) =>
+                              Center(
+                                child: Lottie.asset(
+                                  'assets/lottie/threeDotsLottie.json',
+                                  height: 80,
+                                  width: 80,
+                                ),
+                              ),
                         ),
                       ),
                     ],
@@ -131,8 +154,10 @@ class _DetailScreenState extends State<DetailScreen> {
                     } else {
                       favoriteProvider.addToFavorites(product);
                     }
+                    // Sevimli mahsulotlarni saqlash
+                    favoriteProvider.saveFavorites();
                   },
-                )
+                ),
               ],
             ),
             Row(
@@ -160,9 +185,12 @@ class _DetailScreenState extends State<DetailScreen> {
                   child: Center(
                     child: IconButton(
                       onPressed: () {
-                        Provider.of<CartProvider>(context,
-                            listen: false)
+                        Provider.of<CartProvider>(context, listen: false)
                             .removeFromCart(product);
+                        setState(() {
+                          myItemCount --;
+                          print(myItemCount);
+                        });
                       },
                       icon: Icon(
                         Icons.remove,
@@ -190,7 +218,8 @@ class _DetailScreenState extends State<DetailScreen> {
                   child: Center(
                     child: Text(
                       '${Provider.of<CartProvider>(context).cartItems[product] ?? 0}',
-                      style: const TextStyle(fontSize: 23,fontWeight: FontWeight.w500),
+                      style: const TextStyle(
+                          fontSize: 23, fontWeight: FontWeight.w500),
                     ),
                   ),
                 ),
@@ -200,9 +229,12 @@ class _DetailScreenState extends State<DetailScreen> {
                 Center(
                   child: IconButton(
                     onPressed: () {
-                      Provider.of<CartProvider>(context,
-                          listen: false)
+                      Provider.of<CartProvider>(context, listen: false)
                           .addToCart(product);
+                      setState(() {
+                        myItemCount ++;
+                        print(myItemCount);
+                      });
                     },
                     icon: Icon(
                       Icons.add,
@@ -257,32 +289,44 @@ class _DetailScreenState extends State<DetailScreen> {
                 ),
               ),
             ),
-            const SizedBox(height: 50),
-            // Add to cart button
-            ElevatedButton.icon(
-              onPressed: () {
-                Provider.of<CartProvider>(context, listen: false).addToCart(
-                  product,
-                );
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('${widget.name} added to cart!'),backgroundColor: TColor.primary,),
-                );
-              },
-              label: const Text(
-                'Add to Basket',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
-              ),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: TColor.primary,
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 130, vertical: 22),
-                textStyle: const TextStyle(fontSize: 20),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(18),
+          ],
+        ),
+      ),
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.only(left: 30),
+        child: MaterialButton(
+          height: 73,
+          minWidth: double.infinity,
+          color: TColor.primary,
+          disabledColor: Colors.grey.withOpacity(0.5),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
+          onPressed: (cartProvider.itemCount > 0)
+              ? () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const TabBArView(
+                  selectedIndex: 2,
                 ),
               ),
-            ),
-          ],
+            );
+                }
+              : null,
+          child: const Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                "Go to Cart",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.w600,
+                  fontSize: 28,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

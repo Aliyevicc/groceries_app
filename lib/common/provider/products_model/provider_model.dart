@@ -5,6 +5,7 @@ class Product {
   final String weight;
   final String image;
 
+
   Product({
     required this.name,
     required this.price,
@@ -12,6 +13,7 @@ class Product {
     required this.weight,
     required this.image,
   });
+
 
   Map<String, dynamic> toMap() {
     return {
@@ -23,6 +25,7 @@ class Product {
     };
   }
 
+
   factory Product.fromMap(Map<String, dynamic> map) {
     return Product(
       name: map['name'],
@@ -32,6 +35,7 @@ class Product {
       image: map['image'],
     );
   }
+
 
   @override
   bool operator ==(Object other) {
@@ -44,6 +48,7 @@ class Product {
         other.weight == weight &&
         other.image == image;
   }
+
 
   @override
   int get hashCode {
